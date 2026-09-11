@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8"><style>
+    *{box-sizing:border-box;margin:0} body{width:1280px;height:800px;background:radial-gradient(1200px 700px at 50% 0%,#232a44,#11141f);color:#e9ecf5;
+      font-family:"Inter","Noto Sans","DejaVu Sans",sans-serif;padding:64px 72px}
+    header{display:flex;align-items:center;gap:28px} header svg{width:96px;height:96px;flex:none}
+    h1{font-size:54px;letter-spacing:-1px;font-weight:750} p.sub{font-size:23px;color:#aab2cc;margin-top:10px;max-width:980px;line-height:1.35}
+    .steps{display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;align-items:start;margin-top:70px}
+    .col h2{font-size:20px;color:#ffb03b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;font-weight:700}
+    .tab{background:#1b2033;border:1px solid #2c3350;border-radius:14px;padding:16px 18px;margin-bottom:14px;display:grid;
+      grid-template-columns:30px 1fr;row-gap:4px;column-gap:10px;color:#7d86a3}
+    .tab .dot{grid-row:span 2;font-size:18px;align-self:center} .tab .nm{font-size:20px;font-weight:600;color:#9aa3bf} .tab .st{font-size:15px}
+    .tab.on{background:#1d2a2a;border-color:#2f7d62;color:#58d6a0} .tab.on .nm{color:#e9ecf5}
+    .note{grid-column:2;font-size:14px;color:#ffb03b;font-weight:600}
+    .arrow{text-align:center;font-size:34px;color:#4d5680;align-self:center;padding-top:40px}
+    footer{position:absolute;bottom:52px;left:72px;font-size:18px;color:#7d86a3}
+    </style><body><header><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- keycap: base, sides, top face -->
+  <rect x="6" y="14" width="116" height="108" rx="24" fill="#161a28"/>
+  <rect x="6" y="6" width="116" height="104" rx="24" fill="#2e3450"/>
+  <rect x="16" y="12" width="96" height="84" rx="17" fill="#3d4569"/>
+  <!-- pause bars -->
+  <rect x="40" y="30" width="17" height="48" rx="5" fill="#ffb03b"/>
+  <rect x="71" y="30" width="17" height="48" rx="5" fill="#ffb03b"/>
+</svg>
+<div><h1>Une touche. Tous les onglets.</h1><p class="sub">Lecture/Pause met en pause tout ce qui joue, puis ne relance que ce que vous avez lancé en dernier.</p></div></header>
+    <div class="steps"><div class="col"><h2>Trois onglets jouent</h2><div class="tab on"><span class="dot">▶</span><span class="nm">Conférence</span>
+          <span class="st">en lecture</span></div><div class="tab on"><span class="dot">▶</span><span class="nm">Épisode de podcast</span>
+          <span class="st">en lecture</span></div><div class="tab on"><span class="dot">▶</span><span class="nm">Playlist lo-fi</span>
+          <span class="st">en lecture</span></div></div><div class="arrow">→</div>
+    <div class="col"><h2>Appuyez sur Lecture/Pause</h2><div class="tab "><span class="dot">❙❙</span><span class="nm">Conférence</span>
+          <span class="st">en pause</span></div><div class="tab "><span class="dot">❙❙</span><span class="nm">Épisode de podcast</span>
+          <span class="st">en pause</span></div><div class="tab "><span class="dot">❙❙</span><span class="nm">Playlist lo-fi</span>
+          <span class="st">en pause</span></div></div><div class="arrow">→</div>
+    <div class="col"><h2>Appuyez à nouveau</h2><div class="tab "><span class="dot">❙❙</span><span class="nm">Conférence</span>
+          <span class="st">en pause</span></div><div class="tab "><span class="dot">❙❙</span><span class="nm">Épisode de podcast</span>
+          <span class="st">en pause</span></div><div class="tab on"><span class="dot">▶</span><span class="nm">Playlist lo-fi</span>
+          <span class="st">en lecture</span><span class="note">lancé en dernier par vous</span></div></div></div><footer>Fonctionne en arrière-plan · Linux, Windows, macOS · Aucune donnée collectée</footer></body>

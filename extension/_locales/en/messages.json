@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "Pause Key",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Your Play/Pause media key pauses every playing tab, then resumes only the media you last started yourself.",
+    "description": "Short description shown in the add-ons manager."
+  }
+}

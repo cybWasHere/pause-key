@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "Pause Key",
+    "description": "Nom de l'extension."
+  },
+  "extensionDescription": {
+    "message": "Votre touche média Lecture/Pause met en pause tous les onglets qui jouent, puis relance seulement le dernier média lancé par vous.",
+    "description": "Description courte affichée dans le gestionnaire de modules."
+  }
+}

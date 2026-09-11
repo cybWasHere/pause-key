@@ -1,0 +1,41 @@
+{
+  "slug": "pause-key",
+  "default_locale": "en-US",
+  "name": {
+    "en-US": "Pause Key",
+    "fr": "Pause Key"
+  },
+  "summary": {
+    "en-US": "Your Play/Pause media key pauses every playing tab, then resumes only the media you last started yourself.",
+    "fr": "Votre touche média Lecture/Pause met en pause tous les onglets qui jouent, puis relance seulement le dernier média lancé par vous."
+  },
+  "description": {
+    "en-US": "Press **Play/Pause** and every tab that's playing stops. Press it again and only the video or song **you started last** comes back: not the autoplaying clip in another tab, and not everything at once.\n\n**How it decides**\n- Anything audible playing in any tab (YouTube, embedded players, podcasts, music sites…): Play/Pause pauses all of it.\n- Nothing playing: Play/Pause resumes the media you last started yourself, with a click or key press on the page.\n- Muted autoplay videos are ignored, so they can't swallow your key press.\n- An explicit Pause or Stop (a phone call through KDE Connect, unplugged headphones) only ever pauses, never starts anything.\n\nIt uses Firefox's own media-key support, so it works while Firefox is in the background, on Linux, Windows and macOS. Nothing to install besides the extension.\n\n**No media key? Map any key to Play/Pause:**\n- KDE Plasma: System Settings → Shortcuts → Media Controller → Play/Pause media playback.\n- GNOME: Settings → Keyboard → View and Customise Shortcuts → Sound and Media → Play (or play/pause).\n- Windows: Microsoft PowerToys → Keyboard Manager → remap your key to \"Play/Pause Media\".\n- macOS: use the ▶︎❙❙ key.\n\n**Good to know**\n- Your system sends media keys to the player used most recently: if another app (Spotify, VLC…) played after Firefox, the key goes there.\n- KDE with Plasma Browser Integration: turn off its \"Media Controls\" option, otherwise Plasma can send the key to Plasma Integration's own player, which controls a single tab.\n- Players built purely on Web Audio (some games, synths) can't be paused.\n\n**Privacy:** no data collected, nothing leaves your browser. Open source (MIT): https://github.com/cybWasHere/pause-key",
+    "fr": "Appuyez sur **Lecture/Pause** et tous les onglets qui jouent s'arrêtent. Appuyez encore et seule la vidéo ou la musique **que vous avez lancée en dernier** repart : pas le clip en lecture automatique d'un autre onglet, et pas tout en même temps.\n\n**Comment ça marche**\n- Quelque chose d'audible joue dans un onglet (YouTube, lecteurs intégrés, podcasts, sites de musique…) : Lecture/Pause met tout en pause.\n- Rien ne joue : Lecture/Pause relance le dernier média que vous avez lancé vous-même, d'un clic ou d'une touche sur la page.\n- Les vidéos en lecture automatique sans le son sont ignorées : elles ne peuvent pas « avaler » votre appui.\n- Une vraie commande Pause ou Stop (un appel via KDE Connect, un casque débranché) ne fait que mettre en pause, elle ne lance jamais rien.\n\nL'extension utilise la prise en charge des touches média intégrée à Firefox : elle fonctionne même quand Firefox est en arrière-plan, sous Linux, Windows et macOS. Rien d'autre à installer.\n\n**Pas de touche média ? Associez n'importe quelle touche à Lecture/Pause :**\n- KDE Plasma : Configuration du système → Raccourcis → Contrôleur multimédia → Lire / mettre en pause la lecture du média.\n- GNOME : Paramètres → Clavier → Voir et personnaliser les raccourcis → Son et média → Lecture (ou lecture/pause).\n- Windows : Microsoft PowerToys → Keyboard Manager → associez votre touche à « Play/Pause Media ».\n- macOS : utilisez la touche ▶︎❙❙.\n\n**Bon à savoir**\n- Votre système envoie les touches média au lecteur utilisé le plus récemment : si une autre application (Spotify, VLC…) a joué après Firefox, la touche va vers elle.\n- KDE avec Plasma Browser Integration : désactivez son option « Contrôles multimédias », sinon Plasma peut envoyer la touche au lecteur de Plasma Integration, qui ne contrôle qu'un seul onglet.\n- Les lecteurs construits uniquement sur Web Audio (certains jeux, synthés) ne peuvent pas être mis en pause.\n\n**Vie privée :** aucune donnée collectée, rien ne quitte votre navigateur. Code source ouvert (MIT) : https://github.com/cybWasHere/pause-key"
+  },
+  "categories": {
+    "firefox": [
+      "photos-music-videos",
+      "tabs"
+    ]
+  },
+  "homepage": {
+    "en-US": "https://github.com/cybWasHere/pause-key"
+  },
+  "support_url": {
+    "en-US": "https://github.com/cybWasHere/pause-key/issues"
+  },
+  "tags": [
+    "youtube",
+    "music",
+    "streaming"
+  ],
+  "version": {
+    "license": "MIT",
+    "release_notes": {
+      "en-US": "First public release. Play/Pause pauses every playing tab and resumes only what you last started; works through Firefox's own media-key support.",
+      "fr": "Première version publique. Lecture/Pause met en pause tous les onglets et ne relance que votre dernier média ; passe par la prise en charge des touches média de Firefox."
+    },
+    "approval_notes": "No build step and no minified code: the submitted files are the source (also at https://github.com/cybWasHere/pause-key).\n\nWhat the content script does with page objects, and why:\n- It uses exportFunction on the page's HTMLMediaElement.prototype.play only to learn about media elements that never enter the DOM (new Audio()); it calls the original play() unchanged.\n- It registers navigator.mediaSession play/pause/stop action handlers (through the Xray view) in frames that contain media, because that is how Firefox delivers the hardware Play/Pause media key to a page. It also wraps the page's own mediaSession.setActionHandler (on the instance, chaining to any previous wrapper) so that sites re-registering play/pause/stop handlers do not take the key back; all other actions pass through untouched.\n- The background script only keeps per-frame media state (ids, playing/audible flags) in memory to decide pause-all vs resume-last. No network requests, no storage, no data collection.\n\nTo test: open two tabs with audible media (e.g. two YouTube videos), start both, press the Play/Pause media key (or send MPRIS PlayPause on Linux): both pause. Press again: only the one started last resumes."
+  }
+}

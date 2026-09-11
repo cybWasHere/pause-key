@@ -1,0 +1,15 @@
+<!doctype html><title>pbi-like</title><audio id=m loop src="tone.wav"></audio><button id=play onclick="document.getElementById('m').play()">play</button>
+<script>
+// Plasma Browser Integration's page-script, verbatim pattern: own-property wrapper that records
+// the callback and chains to the previous setActionHandler.
+var oldSetActionHandler = navigator.mediaSession.setActionHandler;
+navigator.mediaSession.setActionHandler = function (name, cb) {
+  document.body.dataset["pbi_seen_" + name] = 1;
+  return oldSetActionHandler.call(navigator.mediaSession, name, cb);
+};
+// Then the site (like YouTube) registers its handlers, before and after playing.
+const bump = (k) => () => document.body.dataset[k] = Number(document.body.dataset[k] || 0) + 1;
+function reg() { for (const a of ["play", "pause", "stop"]) navigator.mediaSession.setActionHandler(a, bump("page_" + a)); }
+reg();
+document.getElementById('m').addEventListener('playing', () => setTimeout(reg, 50));
+</script>

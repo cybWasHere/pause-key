@@ -1,0 +1,8 @@
+<!doctype html><title>yt-like</title><audio id=m loop src="tone.wav"></audio><button id=play onclick="document.getElementById('m').play()">play</button>
+<script>
+// Like YouTube: registers its own Media Session handlers early, and again once playing.
+const bump = (k) => () => document.body.dataset[k] = Number(document.body.dataset[k] || 0) + 1;
+function reg() { for (const a of ["play", "pause", "stop"]) navigator.mediaSession.setActionHandler(a, bump("page_" + a)); }
+reg();
+document.getElementById('m').addEventListener('playing', reg);
+</script>
