@@ -160,9 +160,10 @@ function onCommand(msg) {
       return;
     }
     resuming = el;
-    el.play().catch(() => {
+    el.play().catch((e) => {
       resuming = null;
-      send({ type: "missing", id: msg.id });
+      // AbortError = paused again before playback started (still buffering): not gone.
+      if (e?.name !== "AbortError") send({ type: "missing", id: msg.id });
     });
   }
 }
