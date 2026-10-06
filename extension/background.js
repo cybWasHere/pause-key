@@ -52,10 +52,15 @@ function anyPlaying() {
 }
 
 // Resume the newest hand-started media that still exists; if none, the newest of any kind.
-// A frame answers "missing" when its element is gone, and resume() is retried.
+// Media that is still playing (muted, so pauseAll left it alone) is not a candidate: play()
+// on it does nothing. A frame answers "missing" when its element is gone, and resume() is
+// retried.
 let pendingResume = false;
 function resume() {
-  const live = history.filter((h) => frames.get(h.key)?.media.has(h.id));
+  const live = history.filter((h) => {
+    const m = frames.get(h.key)?.media.get(h.id);
+    return m && !m.playing;
+  });
   const target = live.findLast((h) => h.manual) ?? live.at(-1);
   pendingResume = Boolean(target);
   if (!target) return "nothing";
