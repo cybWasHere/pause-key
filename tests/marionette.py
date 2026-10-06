@@ -12,13 +12,19 @@ class Marionette:
         self.buf, self.n = b"", 0
         self.read()
 
+    def recv(self):
+        chunk = self.s.recv(65536)
+        if not chunk:  # Firefox exited or crashed; without this the loops below spin forever
+            raise ConnectionError("Marionette closed the connection")
+        return chunk
+
     def read(self):
         while b":" not in self.buf:
-            self.buf += self.s.recv(65536)
+            self.buf += self.recv()
         n, rest = self.buf.split(b":", 1)
         n = int(n)
         while len(rest) < n:
-            rest += self.s.recv(65536)
+            rest += self.recv()
         self.buf = rest[n:]
         return json.loads(rest[:n])
 
