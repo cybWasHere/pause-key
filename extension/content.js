@@ -70,14 +70,40 @@ for (const t of ["play", "pause", "ended", "volumechange", "emptied"]) {
   window.addEventListener(t, onMediaEvent, true);
 }
 
+// The two hooks below replace functions the page calls. A function made by exportFunction
+// must never be what the page ends up holding: when the extension is updated, disabled or
+// removed, Firefox nukes this sandbox, the function turns into a dead object, and every later
+// page call to play() or setActionHandler() would throw. So the page gets a Proxy of the
+// original function, built from the page's own objects (no eval, so a strict CSP or Trusted
+// Types cannot block it), whose "apply" trap is only there while this sandbox is alive:
+// looking the trap up reads slot[key], turning `key` into a string dispatches an event, and
+// our listener for it puts the trap into the slot for that one call. Firefox drops the
+// listener together with the sandbox, the slot then stays empty, and the Proxy passes calls
+// straight to the original function. A later injection of this script (after an update)
+// simply wraps that Proxy again.
+function hookPage(obj, name, fn) {
+  const page = window.wrappedJSObject;
+  const orig = obj[name];
+  const slot = new page.Object();
+  const trap = exportFunction((target, self, args) => {
+    delete slot.true;
+    return fn(orig, self, args);
+  }, window);
+  const ping = new window.EventTarget();   // the page's EventTarget, not the sandbox's own
+  ping.addEventListener("ping", () => { slot.true = trap; });
+  const key = new page.Object();   // as a property key: dispatches "ping", then reads "true"
+  key.toString = page.EventTarget.prototype.dispatchEvent.bind(ping.wrappedJSObject, new page.Event("ping"));
+  const handler = new page.Object();
+  page.Object.prototype.__defineGetter__.call(handler, "apply", page.Reflect.get.bind(null, slot, key));
+  obj[name] = new page.Proxy(orig, handler);
+}
+
 // Page scripts often play detached elements (new Audio()); hook play() to learn about them.
 try {
-  const proto = window.wrappedJSObject.HTMLMediaElement.prototype;
-  const origPlay = proto.play;
-  exportFunction(function () {
-    try { idOf(this); } catch (e) {}
-    return origPlay.call(this);
-  }, proto, { defineAs: "play" });
+  hookPage(window.wrappedJSObject.HTMLMediaElement.prototype, "play", (origPlay, el) => {
+    try { idOf(el); } catch (e) {}
+    return origPlay.call(el);
+  });
 } catch (e) {}
 
 // Pages re-register their own play/pause handlers (YouTube does, per video). Once this frame
@@ -87,12 +113,10 @@ try {
 // first, page calls still pass through here. Our own calls go through the content script's
 // Xray view and are not affected by any page-side override.
 try {
-  const ms = window.wrappedJSObject.navigator.mediaSession;
-  const prev = ms.setActionHandler;
-  exportFunction(function (action, handler) {
-    if (claimed && KEY_ACTIONS.includes(String(action))) return undefined;
-    return prev.call(this, action, handler);
-  }, ms, { defineAs: "setActionHandler" });
+  hookPage(window.wrappedJSObject.navigator.mediaSession, "setActionHandler", (prev, ms, args) => {
+    if (claimed && KEY_ACTIONS.includes(String(args[0]))) return undefined;
+    return prev.call(ms, args[0], args[1]);
+  });
 } catch (e) {}
 
 function claimMediaKeys() {
