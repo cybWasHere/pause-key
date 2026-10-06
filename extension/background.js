@@ -27,10 +27,15 @@ browser.runtime.onConnect.addListener((port) => {
       if (pendingResume) resume();
       return;
     }
+    const was = frame.media.get(msg.id);
     frame.media.set(msg.id, { playing: msg.playing, audible: msg.audible });
     if (msg.type === "play") {
       pendingResume = false;
       if (msg.audible) remember(key, msg.id, msg.manual);
+    } else if (msg.playing && msg.audible && msg.active && was && !was.audible) {
+      // Was muted (e.g. muted autoplay) and has just been unmuted by a click or key press:
+      // that counts as hand-started, and makes it the newest.
+      remember(key, msg.id, true);
     } else if (msg.playing && msg.audible && !history.some((h) => h.key === key && h.id === msg.id)) {
       // Already playing when we first saw it (e.g. the extension was just installed):
       // keep it as a resume candidate, but not as a hand-started one.

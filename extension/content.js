@@ -54,6 +54,8 @@ function report(el, type) {
     // "Manual" = started by a click or key press on the page, not by us.
     msg.manual = el !== resuming && navigator.userActivation.isActive;
     if (el === resuming) resuming = null;
+  } else {
+    msg.active = navigator.userActivation.isActive; // e.g. unmuted by a click
   }
   send(msg);
 }
